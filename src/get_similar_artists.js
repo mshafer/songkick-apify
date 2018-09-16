@@ -45,17 +45,11 @@ async function getSimilarArtists(artists) {
                 similarArtistsById[similarArtist.id].similarTo.push(artist.id);
             }
         }
-        await sleep(200);
     }
     return similarArtistsById.values();
 }
 
-async function main() {
-    if (process.argv.length < 3) {
-        console.error(`Usage: node ${process.argv[1]} <songkick_username>`);
-        throw new Error("Invalid number of arguments provided to program");
-    }
-    const username = process.argv[2];
+export async function getSimilarArtistsForUser(username) {
     const trackedArtists = songkickApi.getUserTrackedArtists(username);
     const recommendedArtists = await getSimilarArtists(trackedArtists);
     const result = {
@@ -63,6 +57,17 @@ async function main() {
         trackedArtists,
         recommendedArtists
     };
+    return result;
+}
+
+// In case we want to run this at the command-line
+async function main() {
+    if (process.argv.length < 3) {
+        console.error(`Usage: node ${process.argv[1]} <songkick_username>`);
+        throw new Error("Invalid number of arguments provided to program");
+    }
+    const username = process.argv[2];
+    const result = getSimilarArtistsForUser(username);
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result));
 }
 
