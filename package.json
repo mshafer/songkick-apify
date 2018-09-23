@@ -3,18 +3,22 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files"
+    "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
+    "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./kv-store-dev/ node dist/actors/fetch_tracked_and_similar_artists.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "apify": "^0.7.4",
     "regenerator": "^0.13.2",
-    "songkick-api-node": "^1.0.2"
+    "songkick-api-node": "^1.0.2",
+    "type-check": "^0.3.2"
   },
   "license": "MIT"
 }
