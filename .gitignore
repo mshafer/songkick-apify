@@ -2,8 +2,8 @@
 *.log
 node_modules
 dist
-kv-store-dev/key_value_stores/default/INPUT.json
-kv-store-dev/key_value_stores/default/OUTPUT.json
-kv-store-dev/key_value_stores/songkick-data/
+apify_storage/key_value_stores/default/INPUT.json
+apify_storage/key_value_stores/default/OUTPUT.json
+apify_storage/key_value_stores/songkick-data/
 yarn-error.log
 artists.json

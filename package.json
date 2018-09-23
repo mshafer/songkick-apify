@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
-    "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./kv-store-dev/ node dist/actors/fetch_tracked_and_similar_artists.js"
+    "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./apify_storage/ node dist/acts/fetch_tracked_and_similar_artists.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
