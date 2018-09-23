@@ -12,4 +12,4 @@ RUN npm prune --production
 ENV NODE_ENV=production
 
 # Define the start command
-ENTRYPOINT [ "node", "dist/acts/fetch_tracked_and_similar_artists.js" ]
+ENTRYPOINT [ "node", "dist/start_act.js" ]
