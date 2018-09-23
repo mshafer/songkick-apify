@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import * as fs from "fs";
-import { Songkick } from "./songkick";
+import { Songkick } from "../songkick";
 
 /**
  * Given a songkick username, fetch the artists they track, and all similar artists.
