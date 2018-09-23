@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
+    "build": "rimraf dist/ && ./node_modules/.bin/babel ./src --out-dir dist/ --copy-files",
     "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./apify_storage/ node dist/acts/fetch_tracked_and_similar_artists.js"
   },
   "devDependencies": {
