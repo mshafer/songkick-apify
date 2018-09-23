@@ -12,4 +12,4 @@ RUN npm prune --production
 ENV NODE_ENV=production
 
 # Define the start command
-ENTRYPOINT [ "node", "$ACT_FILENAME" ]
+ENTRYPOINT [ "./start_actor.sh" ]
