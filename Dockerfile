@@ -6,8 +6,8 @@ COPY . ./
 # Install NPM packages, skip optional and development dependencies to keep the image small,
 # avoid logging to much and show log the dependency tree
 RUN npm install --quiet && npm list
-
-RUN babel ./src --out-dir dist/ --copy-files
+RUN npm run build
+RUN npm prune --production
 
 # Define the start command
 CMD [ "node", "$ACT_FILENAME" ]
