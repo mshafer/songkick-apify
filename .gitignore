@@ -1,5 +1,7 @@
 .idea
 *.log
 node_modules
-
+dist
 kv-store-dev/OUTPUT
+yarn-error.log
+artists.json
