@@ -5,8 +5,7 @@ COPY . ./
 
 # Install NPM packages, skip optional and development dependencies to keep the image small,
 # avoid logging to much and show log the dependency tree
-RUN npm install --quiet --only=prod --no-optional \
- && npm list
+RUN npm install --quiet --only=prod && npm list
 
 RUN babel ./src --out-dir dist/ --copy-files
 
