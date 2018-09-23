@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 const Apify = require("apify");
 const typeCheck = require('type-check').typeCheck;
 const Songkick = require("../songkick").Songkick;
@@ -30,7 +29,7 @@ const INPUT_TYPE = `{
     username: String
 }`;
 
-Apify.main(async () => {
+export async function runFetchTrackedAndSimilarArtists() {
     const input = await Apify.getValue('INPUT');
     if (!typeCheck(INPUT_TYPE, input)) {
         console.log('Expected input:');
@@ -50,4 +49,4 @@ Apify.main(async () => {
     const store = await Apify.openKeyValueStore('songkick-data');
     await store.setValue("artists", result);
     await Apify.setValue('OUTPUT', { resultStatus: "SUCCESS", input });
-});
+};
