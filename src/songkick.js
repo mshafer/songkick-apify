@@ -31,7 +31,7 @@ export class Songkick {
             allEvents.push(...events);
         }
         const relevantEvents = this._filterEventsByArtist(allEvents, artists);
-        const relevantEventsLabelled = this._labelRelevantEvents(relevantEvents, artists);
+        this._labelRelevantArtistsInEvents(relevantEvents, artists);
         return relevantEvents;
     }
 
@@ -122,5 +122,25 @@ export class Songkick {
             return event.performance.some(p => relevantArtistIds.has(p.artist.id));
         });
         return relevantEvents;
+    }
+
+    _labelRelevantArtistsInEvents(events, artists) {
+        const trackedArtistsById = {};
+        const recommendedArtistsById = {};
+        for (let artist of artists.trackedArtists) {
+            trackedArtistsById[artist.id] = artist;
+        }
+        for (let artist of artists.recommendedArtists) {
+            recommendedArtistsById[artist.id] = artist;
+        } 
+        for (let event of events) {
+            for (let performance of event.performance) {
+                const artistId = performance.artist.id;
+                performance.artist.tracked = trackedArtistsById.hasOwnProperty(artistId);
+                if (recommendedArtistsById.hasOwnProperty(artistId)) {
+                    performance.artist.similarTo = recommendedArtistsById[artistId].similarTo;
+                }
+            }
+        }
     }
 }
