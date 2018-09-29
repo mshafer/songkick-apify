@@ -10,13 +10,16 @@ Songkick lets you set up notifications for tracked artists, but not for your tra
 
 ## Testing locally
 
-Create a file called `apify_storage/key_value_stores/default/INPUT.json` with the contents:
+Create a file called `INPUT.json` in `apify_storage/key_value_stores/default/` with the contents:
+
 
 ```json
 {
     "username": "<songkick_username>"
 }
 ```
+
+Then run the following commands to test the actor logic locally:
 
 ```bash
 yarn install
