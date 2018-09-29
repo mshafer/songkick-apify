@@ -36,7 +36,7 @@ export class Songkick {
     }
 
     async _getSimilarArtists(artists) {
-        const artistIds = new Set(artists.map(a => a.id).slice(0, 3));
+        const artistIds = new Set(artists.map(a => a.id));
         const similarArtistsById = {};
         for (let artistId of artistIds) {
             console.log(`Fetching artists similar to artist ${artistId}`);
