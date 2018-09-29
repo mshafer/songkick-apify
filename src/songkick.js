@@ -36,14 +36,16 @@ export class Songkick {
     }
 
     async _getSimilarArtists(artists) {
-        const artistIds = artists.map(a => a.id).slice(0, 3);
+        const artistIds = new Set(artists.map(a => a.id).slice(0, 3));
         const similarArtistsById = {};
         for (let artistId of artistIds) {
             console.log(`Fetching artists similar to artist ${artistId}`);
             const similarArtistsRaw = await this.songkickApi.getArtistSimilar(artistId);
             const similarArtists = similarArtistsRaw.map(this._pruneArtistObject);
-            console.log(`Fetched ${similarArtists.length} artists similar to artist ${artistId}`);
-            for (const similarArtist of similarArtists) {
+            console.log(`Fetched ${similarArtistsRaw.length} artists similar to artist ${artistId}`);
+            const untrackedSimilarArtists = similarArtists.filter(a => !artistIds.has(a.id));
+            console.log(`Keeping ${untrackedSimilarArtists.length} that aren't already tracked by the user`);
+            for (const similarArtist of untrackedSimilarArtists) {
                 if (!similarArtistsById.hasOwnProperty(similarArtist.id)) {
                     similarArtistsById[similarArtist.id] = similarArtist;
                     similarArtistsById[similarArtist.id].similarTo = [artistId];
