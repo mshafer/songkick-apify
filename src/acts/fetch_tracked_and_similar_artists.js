@@ -1,6 +1,7 @@
 const Apify = require("apify");
 const typeCheck = require('type-check').typeCheck;
 const Songkick = require("../songkick").Songkick;
+const { SONGKICK_DATA_STORE_ID, ARTISTS_KEY } = require("./constants");
 
 /**
  * Given a songkick username, fetch the artists they track, and all similar artists.
@@ -46,7 +47,7 @@ export async function runFetchTrackedAndSimilarArtists() {
 
     const songkick = new Songkick(API_KEY);
     const result = await songkick.getSimilarArtistsForUser(input.username);
-    const store = await Apify.openKeyValueStore('songkick-data');
-    await store.setValue("artists", result);
+    const songkickDataStore = await Apify.openKeyValueStore(SONGKICK_DATA_STORE_ID);
+    await songkickDataStore.setValue(ARTISTS_KEY, result);
     await Apify.setValue('OUTPUT', { resultStatus: "SUCCESS", input });
 };

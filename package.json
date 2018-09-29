@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "start": "./start_actor.sh",
     "build": "rimraf dist/ && ./node_modules/.bin/babel ./src --out-dir dist/ --copy-files",
-    "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./apify_storage/ node dist/acts/fetch_tracked_and_similar_artists.js"
+    "test-local": "cross-env APIFY_LOCAL_STORAGE_DIR=./apify_storage/ node dist/start_act.js",
+    "test-local:fetch-similar-songkick-artists": "ACT_NAME='fetch-similar-songkick-artists' npm run test-local",
+    "test-local:fetch-local-events": "ACT_NAME='fetch-local-events' npm run test-local"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

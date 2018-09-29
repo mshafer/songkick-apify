@@ -5,8 +5,37 @@ export class Songkick {
         this.songkickApi = new SongkickApiNode(songkickApiKey);
         this.pageSize = 50;
     }
+    
+    async getSimilarArtistsForUser(username) {
+        console.log(`Fetching artists tracked by username: ${username}`);
+        const trackedArtists = await this._getUserTrackedArtistsAllPages(username);
+        console.log(`Fetched ${trackedArtists.length} artists tracked by ${username}`);
+        console.log(`Fetching artists similar to tracked artists`);
+        const recommendedArtists = await this._getSimilarArtists(trackedArtists);
+        console.log(`Fetched ${recommendedArtists.length} artists similar to tracked artists`);
+        const result = {
+            username,
+            trackedArtists: trackedArtists.map(this._pruneArtistObject),
+            recommendedArtists
+        };
+        return result;
+    }
 
-    async getSimilarArtists(artists) {
+    async getLocalEventsForArtists(artists) {
+        console.log(`Fetching metro areas tracked by username: ${artists.username}`);
+        const metroAreas = await this.songkickApi.getUserTrackedMetroAreas(artists.username);
+        console.log(`Fetched ${metroAreas.length} metro areas tracked by ${artists.username}`);
+        const allEvents = [];
+        for (let metroArea of metroAreas) {
+            const events = await this._getLocationUpcomingEventsAllPages(metroArea);
+            allEvents.push(...events);
+        }
+        const relevantEvents = this._filterEventsByArtist(allEvents, artists);
+        const relevantEventsLabelled = this._labelRelevantEvents(relevantEvents, artists);
+        return relevantEvents;
+    }
+
+    async _getSimilarArtists(artists) {
         const artistIds = artists.map(a => a.id).slice(0, 3);
         const similarArtistsById = {};
         for (let artistId of artistIds) {
@@ -24,21 +53,6 @@ export class Songkick {
             }
         }
         return Object.keys(similarArtistsById).map(k => similarArtistsById[k]);
-    }
-    
-    async getSimilarArtistsForUser(username) {
-        console.log(`Fetching artists tracked by username: ${username}`);
-        const trackedArtists = await this._getUserTrackedArtistsAllPages(username);
-        console.log(`Fetched ${trackedArtists.length} artists tracked by ${username}`);
-        console.log(`Fetching artists similar to tracked artists`);
-        const recommendedArtists = await this.getSimilarArtists(trackedArtists);
-        console.log(`Fetched ${recommendedArtists.length} artists similar to tracked artists`);
-        const result = {
-            username,
-            trackedArtists: trackedArtists.map(this._pruneArtistObject),
-            recommendedArtists
-        };
-        return result;
     }
 
     async _getUserTrackedArtistsAllPages(username) {
@@ -63,6 +77,28 @@ export class Songkick {
         return allArtists;
     }
 
+    async _getLocationUpcomingEventsAllPages(metroArea) {
+        const allEvents = [];
+        let currentPage = 1;
+        let pageIsEmpty = false;
+        do {
+            const params = {
+                page: currentPage,
+                per_page: this.pageSize
+            };
+            console.log(`Fetching page ${currentPage} of events for location ${metroArea.id}:${metroArea.displayName}`);
+            const response = await this.songkickApi.getLocationUpcomingEvents(metroArea.id, params);
+            pageIsEmpty = response === undefined; 
+            if (!pageIsEmpty) {
+                console.log(`Adding ${response.length} entries to allEvents`);
+                allEvents.push(...response);
+            }
+            currentPage += 1;
+        } while (!pageIsEmpty);
+        console.log(`No more pages available. Fetched ${allEvents.length} events for location ${metroArea.id}`);
+        return allEvents;
+    }
+
     /**
      * Return a select set of properties from an Artist object
      * 
@@ -75,5 +111,14 @@ export class Songkick {
             uri,
             onTourUntil
         }
+    }
+
+    _filterEventsByArtist(events, artists) {
+        const allArtists = artists.trackedArtists.concat(artists.recommendedArtists); 
+        const relevantArtistIds = new Set(allArtists.map(a => a.id));
+        const relevantEvents = events.filter(event => {
+            return event.performance.some(p => relevantArtistIds.has(p.artist.id));
+        });
+        return relevantEvents;
     }
 }
