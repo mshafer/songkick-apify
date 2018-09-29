@@ -41,6 +41,10 @@ export class Songkick {
         for (let artistId of artistIds) {
             console.log(`Fetching artists similar to artist ${artistId}`);
             const similarArtistsRaw = await this.songkickApi.getArtistSimilar(artistId);
+            if (similarArtistsRaw === undefined) { 
+                console.log(`No artists similar to artist ${artistId}, skipping`);
+                continue; 
+            }
             const similarArtists = similarArtistsRaw.map(this._pruneArtistObject);
             console.log(`Fetched ${similarArtistsRaw.length} artists similar to artist ${artistId}`);
             const untrackedSimilarArtists = similarArtists.filter(a => !artistIds.has(a.id));
