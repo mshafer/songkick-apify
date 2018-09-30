@@ -4,12 +4,13 @@
  * within this project, it must be copied and pasted into the Apify crawler settings.
  */
 function pageFunction(context) {
+    const DATE_OPTIONS = { year: 'numeric', month: 'long', day: 'numeric' };
     const $ = context.jQuery;
     const jsonString = $("body > pre").text();
     const events = JSON.parse(jsonString);
     
-    const rssItems = events.map(function(e) {
-        const artistObjects = e.performance.map(function(p) { return p.artist; });
+    const getDescription = function(event) {
+        const artistObjects = event.performance.map(function(p) { return p.artist; });
         const artistDescriptions = artistObjects.map(function(a) {
             const artistName = a.displayName;
             if (a.tracked) {
@@ -20,11 +21,20 @@ function pageFunction(context) {
                 return artistName;
             }
         });
+        const formattedDate = (new Date(event.start.date)).toLocaleDateString("en-US", DATE_OPTIONS);
+        const content = [
+            formattedDate + " at " + event.venue.displayName + " in " + event.location.city,
+            "Line-up: " + artistDescriptions.join(", ")
+        ]
+        return content.join(". ");
+    }
+    
+    const rssItems = events.map(function(event) {
         return {
-            title: e.displayName,
-            link: e.uri,
-            guid: "http://www.songkick.com/concerts/" + e.id,
-            content: "Line-up: " + artistDescriptions.join(", ") + ". Venue: " + e.venue.displayName
+            title: event.displayName,
+            link: event.uri,
+            guid: event.uri.split("?")[0],
+            description: getDescription(event)
         }
     });
     
