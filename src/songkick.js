@@ -142,7 +142,9 @@ export class Songkick {
                 const artistId = performance.artist.id;
                 performance.artist.tracked = trackedArtistsById.hasOwnProperty(artistId);
                 if (recommendedArtistsById.hasOwnProperty(artistId)) {
-                    performance.artist.similarTo = recommendedArtistsById[artistId].similarTo;
+                    const similarArtistIds = recommendedArtistsById[artistId].similarTo;
+                    const similarArtists = similarArtistIds.map(id => trackedArtistsById[id]);
+                    performance.artist.similarTo = similarArtists;
                 }
             }
         }

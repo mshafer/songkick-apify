@@ -16,7 +16,9 @@ function pageFunction(context) {
             if (a.tracked) {
                 return artistName + " [Tracked]";
             } else if (a.similarTo) {
-                return artistName + " [Recommended]";
+                const similarArtistNames = a.similarTo.map(function(x) { return x.displayName });
+                const similarArtistsString = similarArtistNames.join(", ");
+                return artistName + " [Recommended through " + similarArtistsString + "]";
             } else {
                 return artistName;
             }
