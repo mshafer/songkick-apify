@@ -36,7 +36,8 @@ function pageFunction(context) {
             title: event.displayName,
             link: event.uri,
             guid: event.uri.split("?")[0],
-            description: getDescription(event)
+            description: getDescription(event),
+            pubDate: event.start.datetime
         }
     });
     
