@@ -1,6 +1,6 @@
 /**
  * Apify crawler pageFunction for consuming the output of the `fetch_local_events.js` act
- * Produces a list of JSON objects that can be consumed via RSS. This code doesn't executed
+ * Produces a list of JSON objects that can be consumed via RSS. This code doesn't get executed
  * within this project, it must be copied and pasted into the Apify crawler settings.
  */
 function pageFunction(context) {
